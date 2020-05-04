@@ -15,7 +15,7 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 
 " Switch to your current theme
-let g:airline_theme = 'onedark'
+let g:airline_theme = 'palenight'
 
 " Always show tabs 
 set showtabline=2

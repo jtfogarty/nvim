@@ -40,8 +40,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     " Auto pairs for '(' '[' '{' 
     Plug 'jiangmiao/auto-pairs'
     " Themes
-    Plug 'christianchiarulli/onedark.vim'
-    " Plug 'kaicataldo/material.vim'
+    "Plug 'christianchiarulli/onedark.vim'
+    Plug 'drewtempelmeyer/palenight.vim'
     " Intellisense
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Status Line
