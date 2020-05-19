@@ -39,6 +39,7 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 
 RUN npm i -g neovim
+RUN npm install -g yarn
 RUN pip3 install neovim-remote
 
 RUN apt install -y python2-dev && apt clean
@@ -87,6 +88,11 @@ RUN wget https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar
     && tar -xzf go$GOLANG_VERSION.linux-amd64.tar.gz -C /usr/local \
     && rm -f go$GOLANG_VERSION.linux-amd64.tar.gz
 
+# Lazy Git install
+RUN add-apt-repository ppa:lazygit-team/release \
+    && apt update \
+    && apt install -y lazygit
+
 USER nvim
 WORKDIR /home/nvim
 
@@ -105,6 +111,9 @@ RUN wget https://github.com/gobuffalo/buffalo/releases/download/v${BUFFALO_VERSI
     && tar -xzf ./buffalo_${BUFFALO_VERSION}_Linux_x86_64.tar.gz \
     && mv buffalo ${GOPATH}/bin/ \
     && rm ./buffalo_${BUFFALO_VERSION}_Linux_x86_64.tar.gz
+
+RUN git config --global user.email "nvim@example.com"
+RUN git config --global user.name "nvim"
 
 SHELL ["/bin/bash", "-c"]
 
