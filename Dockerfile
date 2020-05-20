@@ -115,6 +115,13 @@ RUN wget https://github.com/gobuffalo/buffalo/releases/download/v${BUFFALO_VERSI
 RUN git config --global user.email "nvim@example.com"
 RUN git config --global user.name "nvim"
 
+# Fonts
+RUN git clone https://github.com/powerline/fonts.git --depth=1 \
+    && cd fonts \
+    && ./install.sh \
+    && cd .. \
+    && rm -rf fonts
+
 SHELL ["/bin/bash", "-c"]
 
 RUN bash  <(curl -s https://raw.githubusercontent.com/ChristianChiarulli/nvim/master/utils/install.sh)
