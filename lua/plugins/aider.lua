@@ -34,6 +34,9 @@ return {
             vim.fn.writefile({}, output_file)
         end
 
+        -- Open the input file in a new buffer
+        vim.cmd('edit ' .. input_file)
+
         -- Call the original function
         local status, err = pcall(original_background)
         if not status then
