@@ -11,52 +11,8 @@ return {
     })
 
     -- Keybindings
-    -- Debug function
-    local function debug_print(message)
-      print("Aider Debug: " .. message)
-    end
-
-    -- Wrap AiderOpen with debug statements
-    _G.DebugAiderOpen = function()
-      debug_print("AiderOpen function called")
-      local aider = require('aider')
-      debug_print("Aider module loaded: " .. tostring(aider ~= nil))
-      debug_print("Aider module type: " .. type(aider))
-      if type(aider) == "table" then
-        for k, v in pairs(aider) do
-          debug_print("Aider module key: " .. k .. ", type: " .. type(v))
-        end
-      end
-      if aider and type(aider.AiderOpen) == "function" then
-        local status, err = pcall(aider.AiderOpen)
-        if not status then
-          debug_print("Error in AiderOpen: " .. tostring(err))
-        else
-          debug_print("AiderOpen completed successfully")
-        end
-      else
-        debug_print("Error: aider.AiderOpen is not a function")
-        if aider and type(aider.setup) == "function" then
-          debug_print("Attempting to call aider.setup()")
-          aider.setup({})
-          debug_print("Aider setup completed")
-        end
-        if aider and type(aider.AiderOpen) == "function" then
-          debug_print("Attempting to call aider.AiderOpen after setup")
-          local status, err = pcall(aider.AiderOpen)
-          if not status then
-            debug_print("Error in AiderOpen after setup: " .. tostring(err))
-          else
-            debug_print("AiderOpen completed successfully after setup")
-          end
-        else
-          debug_print("Error: aider.AiderOpen is still not a function after setup")
-        end
-      end
-    end
-
-    vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua DebugAiderOpen()<cr>', {noremap = true, silent = false})
-    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua require("aider").background()<cr>', {noremap = true, silent = false})
+    vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua require("aider").AiderOpen()<cr>', {noremap = true, silent = true})
+    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua require("aider").AiderBackground()<cr>', {noremap = true, silent = true})
 
     -- ReloadBuffer function
     function _G.ReloadBuffer()
