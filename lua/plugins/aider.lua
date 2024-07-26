@@ -12,7 +12,34 @@ return {
 
     -- Keybindings
     vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua require("aider").AiderOpen()<cr>', {noremap = true, silent = true})
-    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua require("aider").AiderBackground()<cr>', {noremap = true, silent = true})
+    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua require("aider").AiderBackground()<cr>', {noremap = true, silent = false})
+
+    -- Modify the AiderBackground function in the aider module
+    local aider = require("aider")
+    local original_background = aider.AiderBackground
+    aider.AiderBackground = function()
+        -- Ensure the aider directory exists
+        local aider_dir = vim.fn.expand('~/.aider')
+        if vim.fn.isdirectory(aider_dir) == 0 then
+            vim.fn.mkdir(aider_dir, 'p')
+        end
+
+        -- Ensure the input and output files exist
+        local input_file = aider_dir .. '/input.md'
+        local output_file = aider_dir .. '/output.md'
+        if vim.fn.filereadable(input_file) == 0 then
+            vim.fn.writefile({}, input_file)
+        end
+        if vim.fn.filereadable(output_file) == 0 then
+            vim.fn.writefile({}, output_file)
+        end
+
+        -- Call the original function
+        local status, err = pcall(original_background)
+        if not status then
+            print("Error in AiderBackground: " .. tostring(err))
+        end
+    end
 
     -- ReloadBuffer function
     function _G.ReloadBuffer()
