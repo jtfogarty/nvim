@@ -11,8 +11,24 @@ return {
     })
 
     -- Keybindings
-    vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua AiderOpen()<cr>', {noremap = true, silent = true})
-    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua AiderBackground()<cr>', {noremap = true, silent = true})
+    -- Debug function
+    local function debug_print(message)
+      print("Aider Debug: " .. message)
+    end
+
+    -- Wrap AiderOpen with debug statements
+    local function DebugAiderOpen()
+      debug_print("AiderOpen function called")
+      local status, err = pcall(AiderOpen)
+      if not status then
+        debug_print("Error in AiderOpen: " .. tostring(err))
+      else
+        debug_print("AiderOpen completed successfully")
+      end
+    end
+
+    vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua DebugAiderOpen()<cr>', {noremap = true, silent = false})
+    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua AiderBackground()<cr>', {noremap = true, silent = false})
 
     -- ReloadBuffer function
     function _G.ReloadBuffer()
