@@ -19,11 +19,16 @@ return {
     -- Wrap AiderOpen with debug statements
     _G.DebugAiderOpen = function()
       debug_print("AiderOpen function called")
-      local status, err = pcall(require('aider').open)
-      if not status then
-        debug_print("Error in AiderOpen: " .. tostring(err))
+      local aider = require('aider')
+      if aider and type(aider.open) == "function" then
+        local status, err = pcall(aider.open)
+        if not status then
+          debug_print("Error in AiderOpen: " .. tostring(err))
+        else
+          debug_print("AiderOpen completed successfully")
+        end
       else
-        debug_print("AiderOpen completed successfully")
+        debug_print("Error: aider.open is not a function")
       end
     end
 
