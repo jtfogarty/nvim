@@ -27,19 +27,30 @@ return {
           debug_print("Aider module key: " .. k .. ", type: " .. type(v))
         end
       end
-      if aider and type(aider.open) == "function" then
-        local status, err = pcall(aider.open)
+      if aider and type(aider.AiderOpen) == "function" then
+        local status, err = pcall(aider.AiderOpen)
         if not status then
           debug_print("Error in AiderOpen: " .. tostring(err))
         else
           debug_print("AiderOpen completed successfully")
         end
       else
-        debug_print("Error: aider.open is not a function")
+        debug_print("Error: aider.AiderOpen is not a function")
         if aider and type(aider.setup) == "function" then
           debug_print("Attempting to call aider.setup()")
           aider.setup({})
           debug_print("Aider setup completed")
+        end
+        if aider and type(aider.AiderOpen) == "function" then
+          debug_print("Attempting to call aider.AiderOpen after setup")
+          local status, err = pcall(aider.AiderOpen)
+          if not status then
+            debug_print("Error in AiderOpen after setup: " .. tostring(err))
+          else
+            debug_print("AiderOpen completed successfully after setup")
+          end
+        else
+          debug_print("Error: aider.AiderOpen is still not a function after setup")
         end
       end
     end
