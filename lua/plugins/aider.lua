@@ -37,10 +37,29 @@ return {
         -- Open the input file in a new buffer
         vim.cmd('edit ' .. input_file)
 
-        -- Call the original function
-        local status, err = pcall(original_background)
+        -- Call the original function with error handling
+        local status, result = pcall(function()
+            local handle = io.popen(vim.g.python_env .. " aider --background")
+            if handle then
+                local output = handle:read("*a")
+                handle:close()
+                return output
+            else
+                error("Failed to execute aider command")
+            end
+        end)
+
         if not status then
-            print("Error in AiderBackground: " .. tostring(err))
+            print("Error in AiderBackground: " .. tostring(result))
+            -- Additional debugging information
+            print("Python environment: " .. tostring(vim.g.python_env))
+            print("Aider command: " .. vim.g.python_env .. " aider --background")
+            -- Check if aider is in PATH
+            local aider_in_path = vim.fn.executable('aider') == 1
+            print("Aider in PATH: " .. tostring(aider_in_path))
+        else
+            print("Aider background process started successfully")
+            print("Output: " .. result)
         end
     end
 
