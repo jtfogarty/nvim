@@ -20,6 +20,13 @@ return {
     _G.DebugAiderOpen = function()
       debug_print("AiderOpen function called")
       local aider = require('aider')
+      debug_print("Aider module loaded: " .. tostring(aider ~= nil))
+      debug_print("Aider module type: " .. type(aider))
+      if type(aider) == "table" then
+        for k, v in pairs(aider) do
+          debug_print("Aider module key: " .. k .. ", type: " .. type(v))
+        end
+      end
       if aider and type(aider.open) == "function" then
         local status, err = pcall(aider.open)
         if not status then
@@ -29,6 +36,11 @@ return {
         end
       else
         debug_print("Error: aider.open is not a function")
+        if aider and type(aider.setup) == "function" then
+          debug_print("Attempting to call aider.setup()")
+          aider.setup({})
+          debug_print("Aider setup completed")
+        end
       end
     end
 
