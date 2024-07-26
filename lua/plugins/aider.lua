@@ -1,14 +1,19 @@
 return {
   "jtfogarty/aider.nvim",
   config = function()
-    require('aider').setup({
+    local aider_config = {
       -- Configuration options
       auto_manage_context = true,
       default_bindings = true,
       -- You can also set the model to use
       -- model = "claude 3.5", -- or "gpt-3.5-turbo" or any other available model
       python_env = "aider_activate &&"
-    })
+    }
+
+    require('aider').setup(aider_config)
+
+    -- Set the global python_env variable
+    vim.g.python_env = aider_config.python_env or ""
 
     -- Keybindings
     vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua require("aider").AiderOpen()<cr>', {noremap = true, silent = true})
@@ -39,7 +44,8 @@ return {
 
         -- Call the original function with error handling
         local status, result = pcall(function()
-            local handle = io.popen(vim.g.python_env .. " aider --background")
+            local python_env = vim.g.python_env or ""
+            local handle = io.popen(python_env .. "aider --background")
             if handle then
                 local output = handle:read("*a")
                 handle:close()
@@ -53,7 +59,7 @@ return {
             print("Error in AiderBackground: " .. tostring(result))
             -- Additional debugging information
             print("Python environment: " .. tostring(vim.g.python_env))
-            print("Aider command: " .. vim.g.python_env .. " aider --background")
+            print("Aider command: " .. (vim.g.python_env or "") .. "aider --background")
             -- Check if aider is in PATH
             local aider_in_path = vim.fn.executable('aider') == 1
             print("Aider in PATH: " .. tostring(aider_in_path))
