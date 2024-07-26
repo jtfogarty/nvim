@@ -17,9 +17,9 @@ return {
     end
 
     -- Wrap AiderOpen with debug statements
-    local function DebugAiderOpen()
+    _G.DebugAiderOpen = function()
       debug_print("AiderOpen function called")
-      local status, err = pcall(AiderOpen)
+      local status, err = pcall(require('aider').open)
       if not status then
         debug_print("Error in AiderOpen: " .. tostring(err))
       else
@@ -28,7 +28,7 @@ return {
     end
 
     vim.api.nvim_set_keymap('n', '<leader>oa', '<cmd>lua DebugAiderOpen()<cr>', {noremap = true, silent = false})
-    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua AiderBackground()<cr>', {noremap = true, silent = false})
+    vim.api.nvim_set_keymap('n', '<leader>ob', '<cmd>lua require("aider").background()<cr>', {noremap = true, silent = false})
 
     -- ReloadBuffer function
     function _G.ReloadBuffer()
