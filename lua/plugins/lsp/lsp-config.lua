@@ -80,61 +80,53 @@ return {
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
     end
 
-    require("mason-lspconfig").setup_handlers({
-      -- default handler for installed servers
-      function(server_name)
-        lspconfig[server_name].setup({
-          capabilities = capabilities,
-        })
-      end,
-      ["graphql"] = function()
-        -- configure graphql language server
-        lspconfig["graphql"].setup({
-          capabilities = capabilities,
-          filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-        })
-      end,
-      ["emmet_ls"] = function()
-        -- configure emmet language server
-        lspconfig["emmet_ls"].setup({
-          capabilities = capabilities,
-          filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
-        })
-      end,
-      ["templ"] = function()
-        lspconfig["templ"].setup({
-            capabilities = capabilities
-        })
-      end,
-      ["gopls"] = function()
-        lspconfig["gopls"].setup({
-            capabilities = capabilities
-        })
-      end,
-      ["html"] = function()
-        lspconfig["html"].setup({
-            capabilities = capabilities,
-            filetypes = {"html", "templ"}
-        })
-      end,
-      ["lua_ls"] = function()
-        -- configure lua server (with special settings)
-        lspconfig["lua_ls"].setup({
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              -- make the language server recognize "vim" global
-              diagnostics = {
-                globals = { "vim" },
-              },
-              completion = {
-                callSnippet = "Replace",
-              },
-            },
+    -- Default configuration for servers with no special settings
+    local servers = {
+        "ts_ls",
+        "cssls",
+        "tailwindcss",
+        "buf_ls",
+        "prismals",
+        "pyright",
+        "templ",
+        "gopls",
+    }
+
+    for _, server in ipairs(servers) do
+      lspconfig[server].setup({
+        capabilities = capabilities,
+      })
+    end
+
+    -- Custom configuration for specific servers
+    lspconfig["graphql"].setup({
+      capabilities = capabilities,
+      filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+    })
+
+    lspconfig["emmet_ls"].setup({
+      capabilities = capabilities,
+      filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+    })
+
+    lspconfig["html"].setup({
+        capabilities = capabilities,
+        filetypes = {"html", "templ"}
+    })
+
+    lspconfig["lua_ls"].setup({
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          -- make the language server recognize "vim" global
+          diagnostics = {
+            globals = { "vim" },
           },
-        })
-      end,
+          completion = {
+            callSnippet = "Replace",
+          },
+        },
+      },
     })
   end,
 }
-
