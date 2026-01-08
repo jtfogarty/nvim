@@ -1,7 +1,7 @@
 return {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     dependencies = {
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
     }, 
 
@@ -31,7 +31,7 @@ return {
             "lua_ls",
             "graphql",
             "gopls",
-            "bufls",
+            "buf_ls",
             "emmet_ls",
             "prismals",
             "pyright",
