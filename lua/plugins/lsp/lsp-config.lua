@@ -9,15 +9,8 @@ return {
     "williamboman/mason-lspconfig.nvim",
   },
   config = function()
-    -- import lspconfig plugin
-    local lspconfig = require("lspconfig")
-
-    -- import mason_lspconfig plugin
-    local mason_lspconfig = require("mason-lspconfig")
-
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
     local keymap = vim.keymap -- for conciseness
 
     vim.api.nvim_create_autocmd("LspAttach", {
@@ -80,7 +73,7 @@ return {
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
     end
 
-    -- Default configuration for servers with no special settings
+    -- List of servers to configure and enable
     local servers = {
         "ts_ls",
         "cssls",
@@ -90,43 +83,46 @@ return {
         "pyright",
         "templ",
         "gopls",
+        "html",
+        "graphql",
+        "emmet_ls",
+        "lua_ls"
+    }
+
+    -- Custom configurations for specific servers
+    local server_configs = {
+        graphql = {
+            filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+        },
+        emmet_ls = {
+            filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+        },
+        html = {
+            filetypes = {"html", "templ"},
+        },
+        lua_ls = {
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { "vim" },
+                    },
+                    completion = {
+                        callSnippet = "Replace",
+                    },
+                },
+            },
+        },
     }
 
     for _, server in ipairs(servers) do
-      lspconfig[server].setup({
-        capabilities = capabilities,
-      })
+        local config = server_configs[server] or {}
+        -- Ensure capabilities are attached to every server config
+        config.capabilities = capabilities
+        
+        -- Apply configuration using native Neovim API
+        vim.lsp.config(server, config)
+        -- Enable the server
+        vim.lsp.enable(server)
     end
-
-    -- Custom configuration for specific servers
-    lspconfig["graphql"].setup({
-      capabilities = capabilities,
-      filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-    })
-
-    lspconfig["emmet_ls"].setup({
-      capabilities = capabilities,
-      filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
-    })
-
-    lspconfig["html"].setup({
-        capabilities = capabilities,
-        filetypes = {"html", "templ"}
-    })
-
-    lspconfig["lua_ls"].setup({
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          -- make the language server recognize "vim" global
-          diagnostics = {
-            globals = { "vim" },
-          },
-          completion = {
-            callSnippet = "Replace",
-          },
-        },
-      },
-    })
   end,
 }
